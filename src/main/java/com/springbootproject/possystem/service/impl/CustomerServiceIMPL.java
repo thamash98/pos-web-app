@@ -89,4 +89,23 @@ public class CustomerServiceIMPL implements CustomerService {
             return "Customer not found in that Id";
         }
     }
+
+    @Override
+    public List<CustomerDTO> getAllCustomersByActiveState(boolean activeState) {
+        List<Customer> allCustomers = customerRepo.findAllByActiveStateEquals(activeState);
+        List<CustomerDTO> customerDTOList = new ArrayList<>();
+        for (Customer customer: allCustomers) {
+            CustomerDTO customerDTO = new CustomerDTO(
+                    customer.getCustomerId(),
+                    customer.getCustomerName(),
+                    customer.getCustomerAddress(),
+                    customer.getCustomerSalary(),
+                    customer.getNic(),
+                    customer.isActiveState()
+            );
+            customerDTOList.add(customerDTO);
+        }
+
+        return customerDTOList;
+    }
 }
