@@ -31,5 +31,14 @@ public class ItemController {
 
     }
 
+    @GetMapping(
+            path = "/get-by-id",
+            params = "id"
+    )
+    public ItemDTO getItemById(@RequestParam(value = "id") int itemId){
+        ItemDTO itemDTO = itemService.getItemById(itemId);
+        return itemDTO;
+    }
+
 
 }

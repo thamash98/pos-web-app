@@ -7,4 +7,6 @@ public interface ItemService {
     String saveItem(ItemDTO itemDTO);
 
     String updateItem(ItemUpdateDTO itemUpdateDTO);
+
+    ItemDTO getItemById(int itemId);
 }

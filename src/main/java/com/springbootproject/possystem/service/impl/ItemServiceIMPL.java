@@ -39,7 +39,28 @@ public class ItemServiceIMPL implements ItemService {
             item.setSellingPrice(itemUpdateDTO.getSellingPrice());
             itemRepo.save(item);
             return "update Successful";
+        }else {
+            return "Item not found";
         }
-        return "Item not found";
+
+    }
+
+    @Override
+    public ItemDTO getItemById(int itemId) {
+        if (itemRepo.existsById(itemId)){
+            Item item = itemRepo.getReferenceById(itemId);
+            ItemDTO itemDTO = new ItemDTO(
+                item.getItemId(),
+                item.getItemName(),
+                item.getMeasuringUnitType(),
+                item.getQtyOnHand(),
+                item.getSupplierPrice(),
+                item.getSellingPrice(),
+                item.isActiveState()
+            );
+            return itemDTO;
+        }else{
+            throw new RuntimeException("Item not found");
+        }
     }
 }
