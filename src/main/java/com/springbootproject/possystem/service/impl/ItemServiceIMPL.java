@@ -2,17 +2,25 @@ package com.springbootproject.possystem.service.impl;
 
 import com.springbootproject.possystem.dto.ItemDTO;
 import com.springbootproject.possystem.dto.request.ItemUpdateDTO;
+import com.springbootproject.possystem.dto.response.ItemResponseDTO;
 import com.springbootproject.possystem.entity.Item;
 import com.springbootproject.possystem.repo.ItemRepo;
 import com.springbootproject.possystem.service.ItemService;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ItemServiceIMPL implements ItemService {
 
     @Autowired
     private ItemRepo itemRepo;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public String saveItem(ItemDTO itemDTO) {
@@ -60,6 +68,17 @@ public class ItemServiceIMPL implements ItemService {
             );
             return itemDTO;
         }else{
+            throw new RuntimeException("Item not found");
+        }
+    }
+
+    @Override
+    public List<ItemResponseDTO> getItemBnNameAndStatus(String itemName) {
+        List<ItemResponseDTO> items = itemRepo.findAllByItemNameEqualsAndActiveStateEquals(itemName, true);
+        if(items.size() > 0){
+            List<ItemResponseDTO> itemResponseDTOS = modelMapper.map(items,new TypeToken<List<ItemResponseDTO>>(){}.getType());
+            return itemResponseDTOS;
+        }else {
             throw new RuntimeException("Item not found");
         }
     }

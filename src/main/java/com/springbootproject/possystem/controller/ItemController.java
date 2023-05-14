@@ -3,9 +3,12 @@ package com.springbootproject.possystem.controller;
 import com.springbootproject.possystem.dto.CustomerDTO;
 import com.springbootproject.possystem.dto.ItemDTO;
 import com.springbootproject.possystem.dto.request.ItemUpdateDTO;
+import com.springbootproject.possystem.dto.response.ItemResponseDTO;
 import com.springbootproject.possystem.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/item")
@@ -38,6 +41,15 @@ public class ItemController {
     public ItemDTO getItemById(@RequestParam(value = "id") int itemId){
         ItemDTO itemDTO = itemService.getItemById(itemId);
         return itemDTO;
+    }
+    @GetMapping(
+            path = "/get-by-name",
+            params = "name"
+    )
+    public List<ItemResponseDTO> getItemBnNameAndStatus(@RequestParam(value = "name") String itemName){
+        List<ItemResponseDTO> itemDTO = itemService.getItemBnNameAndStatus(itemName);
+        return itemDTO;
+
     }
 
 
