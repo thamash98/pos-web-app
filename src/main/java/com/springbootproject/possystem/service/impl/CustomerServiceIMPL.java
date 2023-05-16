@@ -5,6 +5,7 @@ import com.springbootproject.possystem.dto.request.CustomerUpdateDTO;
 import com.springbootproject.possystem.entity.Customer;
 import com.springbootproject.possystem.repo.CustomerRepo;
 import com.springbootproject.possystem.service.CustomerService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,16 +16,13 @@ import java.util.List;
 public class CustomerServiceIMPL implements CustomerService {
     @Autowired
     private CustomerRepo customerRepo;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
     @Override
     public String saveCustomer(CustomerDTO customerDTO) {
-        Customer customer = new Customer(  //DTO object convert into entity type
-                customerDTO.getCustomerId(),
-                customerDTO.getCustomerName(),
-                customerDTO.getCustomerAddress(),
-                customerDTO.getCustomerSalary(),
-                customerDTO.getNic(),
-                customerDTO.isActiveState()
-        );
+        Customer customer = modelMapper.map(customerDTO,Customer.class);
         customerRepo.save(customer);
         return "Saved";
     }
@@ -47,14 +45,7 @@ public class CustomerServiceIMPL implements CustomerService {
     public CustomerDTO getCustomerById(int customerId) {
         if(customerRepo.existsById(customerId)){
             Customer customer = customerRepo.getReferenceById(customerId);
-            CustomerDTO customerDTO = new CustomerDTO(
-                    customer.getCustomerId(),
-                    customer.getCustomerName(),
-                    customer.getCustomerAddress(),
-                    customer.getCustomerSalary(),
-                    customer.getNic(),
-                    customer.isActiveState()
-            );
+            CustomerDTO customerDTO = modelMapper.map(customer,CustomerDTO.class);
             return customerDTO;
         }else {
             throw new RuntimeException("customer not found");
@@ -66,14 +57,7 @@ public class CustomerServiceIMPL implements CustomerService {
         List<Customer> allCustomers = customerRepo.findAll();
         List<CustomerDTO> customerDTOList = new ArrayList<>();
         for (Customer customer: allCustomers) {
-            CustomerDTO customerDTO = new CustomerDTO(
-                    customer.getCustomerId(),
-                    customer.getCustomerName(),
-                    customer.getCustomerAddress(),
-                    customer.getCustomerSalary(),
-                    customer.getNic(),
-                    customer.isActiveState()
-            );
+            CustomerDTO customerDTO = modelMapper.map(customer,CustomerDTO.class);
             customerDTOList.add(customerDTO);
         }
         
@@ -84,7 +68,7 @@ public class CustomerServiceIMPL implements CustomerService {
     public String deleteCustomer(int customerId) {
         if(customerRepo.existsById(customerId)){
             customerRepo.deleteById(customerId);
-            return customerId+" deleted succesfully";
+            return customerId+" deleted successfully";
         }else {
             return "Customer not found in that Id";
         }
@@ -95,14 +79,7 @@ public class CustomerServiceIMPL implements CustomerService {
         List<Customer> allCustomers = customerRepo.findAllByActiveStateEquals(activeState);
         List<CustomerDTO> customerDTOList = new ArrayList<>();
         for (Customer customer: allCustomers) {
-            CustomerDTO customerDTO = new CustomerDTO(
-                    customer.getCustomerId(),
-                    customer.getCustomerName(),
-                    customer.getCustomerAddress(),
-                    customer.getCustomerSalary(),
-                    customer.getNic(),
-                    customer.isActiveState()
-            );
+            CustomerDTO customerDTO = modelMapper.map(customer,CustomerDTO.class);
             customerDTOList.add(customerDTO);
         }
 

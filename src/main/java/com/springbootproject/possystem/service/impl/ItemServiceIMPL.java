@@ -24,17 +24,15 @@ public class ItemServiceIMPL implements ItemService {
 
     @Override
     public String saveItem(ItemDTO itemDTO) {
-        Item item = new Item(
-                itemDTO.getItemId(),
-                itemDTO.getItemName(),
-                itemDTO.getMeasuringUnitType(),
-                itemDTO.getQtyOnHand(),
-                itemDTO.getSupplierPrice(),
-                itemDTO.getSellingPrice(),
-                itemDTO.isActiveState()
-        );
-        itemRepo.save(item);
-        return "saved Item";
+        Item item = modelMapper.map(itemDTO,Item.class);
+        if(!itemRepo.existsById(item.getItemId())){
+            itemRepo.save(item);
+            return "saved Item";
+        }else {
+            return "Already Exist";
+        }
+
+
     }
 
     @Override
@@ -79,7 +77,7 @@ public class ItemServiceIMPL implements ItemService {
             List<ItemResponseDTO> itemResponseDTOS = modelMapper.map(items,new TypeToken<List<ItemResponseDTO>>(){}.getType());
             return itemResponseDTOS;
         }else {
-            throw new RuntimeException("Item not found");
+            throw new RuntimeException("Item in out of stock");
         }
     }
 }
