@@ -5,7 +5,10 @@ import com.springbootproject.possystem.dto.ItemDTO;
 import com.springbootproject.possystem.dto.request.ItemUpdateDTO;
 import com.springbootproject.possystem.dto.response.ItemResponseDTO;
 import com.springbootproject.possystem.service.ItemService;
+import com.springbootproject.possystem.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,35 +23,45 @@ public class ItemController {
     @PostMapping(
             path = {"/save"}
     )
-    public String saveItem(@RequestBody ItemDTO itemDTO){
+    public ResponseEntity<StandardResponse> saveItem(@RequestBody ItemDTO itemDTO){
         String message = itemService.saveItem(itemDTO);
-        return message;
+        ResponseEntity<StandardResponse> response = new ResponseEntity<>(
+                new StandardResponse(201,"Save Successfully",message),
+                HttpStatus.CREATED);
+        return response;
     }
 
     @PutMapping(
             path = {"/update"}
     )
-    public String updateItem(@RequestBody ItemUpdateDTO itemUpdateDTO){
-        itemService.updateItem(itemUpdateDTO);
-        return "updated";
-
+    public ResponseEntity<StandardResponse> updateItem(@RequestBody ItemUpdateDTO itemUpdateDTO){
+        String message = itemService.updateItem(itemUpdateDTO);
+        return new ResponseEntity<>(
+                new StandardResponse(201,"Updated Successfully",message),
+                HttpStatus.CREATED);
     }
 
     @GetMapping(
             path = "/get-by-id",
             params = "id"
     )
-    public ItemDTO getItemById(@RequestParam(value = "id") int itemId){
+    public ResponseEntity<StandardResponse> getItemById(@RequestParam(value = "id") int itemId){
         ItemDTO itemDTO = itemService.getItemById(itemId);
-        return itemDTO;
+        return  new ResponseEntity<>(
+                new StandardResponse(200,"Success",itemDTO),
+                HttpStatus.OK
+        );
     }
     @GetMapping(
             path = "/get-by-name",
             params = "name"
     )
-    public List<ItemResponseDTO> getItemBnNameAndStatus(@RequestParam(value = "name") String itemName){
+    public ResponseEntity<StandardResponse> getItemBnNameAndStatus(@RequestParam(value = "name") String itemName){
         List<ItemResponseDTO> itemDTO = itemService.getItemBnNameAndStatus(itemName);
-        return itemDTO;
+        return  new ResponseEntity<>(
+                new StandardResponse(200,"Success",itemDTO),
+                HttpStatus.OK
+        );
 
     }
 
