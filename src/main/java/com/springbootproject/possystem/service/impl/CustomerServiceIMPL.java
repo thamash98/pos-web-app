@@ -3,6 +3,7 @@ package com.springbootproject.possystem.service.impl;
 import com.springbootproject.possystem.dto.CustomerDTO;
 import com.springbootproject.possystem.dto.request.CustomerUpdateDTO;
 import com.springbootproject.possystem.entity.Customer;
+import com.springbootproject.possystem.exception.NotFoundException;
 import com.springbootproject.possystem.repo.CustomerRepo;
 import com.springbootproject.possystem.service.CustomerService;
 import org.modelmapper.ModelMapper;
@@ -37,7 +38,7 @@ public class CustomerServiceIMPL implements CustomerService {
 
             return "updated customer";
         }else {
-            return "Customer not found";
+            throw new NotFoundException("Customer Id Not Found");
         }
     }
 
@@ -48,7 +49,7 @@ public class CustomerServiceIMPL implements CustomerService {
             CustomerDTO customerDTO = modelMapper.map(customer,CustomerDTO.class);
             return customerDTO;
         }else {
-            throw new RuntimeException("customer not found");
+            throw new NotFoundException("Customer Not Found");
         }
     }
 
