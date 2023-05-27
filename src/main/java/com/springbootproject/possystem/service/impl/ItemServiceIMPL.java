@@ -1,14 +1,18 @@
 package com.springbootproject.possystem.service.impl;
 
 import com.springbootproject.possystem.dto.ItemDTO;
+import com.springbootproject.possystem.dto.paginated.PaginatedResponseItemDTO;
 import com.springbootproject.possystem.dto.request.ItemUpdateDTO;
 import com.springbootproject.possystem.dto.response.ItemResponseDTO;
+import com.springbootproject.possystem.exception.NotFoundException;
 import com.springbootproject.possystem.entity.Item;
 import com.springbootproject.possystem.repo.ItemRepo;
 import com.springbootproject.possystem.service.ItemService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,8 +35,6 @@ public class ItemServiceIMPL implements ItemService {
         }else {
             return "Already Exist";
         }
-
-
     }
 
     @Override
@@ -55,15 +57,7 @@ public class ItemServiceIMPL implements ItemService {
     public ItemDTO getItemById(int itemId) {
         if (itemRepo.existsById(itemId)){
             Item item = itemRepo.getReferenceById(itemId);
-            ItemDTO itemDTO = new ItemDTO(
-                item.getItemId(),
-                item.getItemName(),
-                item.getMeasuringUnitType(),
-                item.getQtyOnHand(),
-                item.getSupplierPrice(),
-                item.getSellingPrice(),
-                item.isActiveState()
-            );
+            ItemDTO itemDTO = modelMapper.map(item,ItemDTO.class);
             return itemDTO;
         }else{
             throw new RuntimeException("Item not found");
@@ -71,13 +65,37 @@ public class ItemServiceIMPL implements ItemService {
     }
 
     @Override
-    public List<ItemResponseDTO> getItemBnNameAndStatus(String itemName) {
-        List<ItemResponseDTO> items = itemRepo.findAllByItemNameEqualsAndActiveStateEquals(itemName, true);
+    public List<ItemResponseDTO> getItemByNameAndStatus(String itemName) {
+        List<Item> items = itemRepo.findAllByItemNameEqualsAndActiveStateEquals(itemName, true);
         if(items.size() > 0){
             List<ItemResponseDTO> itemResponseDTOS = modelMapper.map(items,new TypeToken<List<ItemResponseDTO>>(){}.getType());
             return itemResponseDTOS;
         }else {
             throw new RuntimeException("Item in out of stock");
         }
+    }
+
+    @Override
+    public List<ItemResponseDTO> getItemByActiveStatus(boolean activeStatus) {
+        List<Item> items = itemRepo.findAllByActiveStateEquals(activeStatus);
+        if(items.size() > 0){
+            List<ItemResponseDTO> itemResponseDTOS = modelMapper.map(items,new TypeToken<List<ItemResponseDTO>>(){}.getType());
+            return itemResponseDTOS;
+        }else {
+            throw new NotFoundException("No Active Status Items found");
+        }
+    }
+
+    @Override
+    public PaginatedResponseItemDTO getItemByActiveStatusWithPaginated(boolean activeStatus, int page, int size) {
+        Page<Item> items = itemRepo.findAllByActiveStateEquals(activeStatus, PageRequest.of(page,size));
+        if (items.getSize()<1){
+            throw new NotFoundException("No Data");
+        }
+        PaginatedResponseItemDTO paginatedResponseItemDTO = new PaginatedResponseItemDTO(
+          modelMapper.map(items,new TypeToken<List<ItemResponseDTO>>(){}.getType()),
+                2
+        );
+        return paginatedResponseItemDTO;
     }
 }

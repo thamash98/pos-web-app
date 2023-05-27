@@ -1,7 +1,7 @@
 package com.springbootproject.possystem.controller;
 
-import com.springbootproject.possystem.dto.CustomerDTO;
 import com.springbootproject.possystem.dto.ItemDTO;
+import com.springbootproject.possystem.dto.paginated.PaginatedResponseItemDTO;
 import com.springbootproject.possystem.dto.request.ItemUpdateDTO;
 import com.springbootproject.possystem.dto.response.ItemResponseDTO;
 import com.springbootproject.possystem.service.ItemService;
@@ -56,14 +56,33 @@ public class ItemController {
             path = "/get-by-name",
             params = "name"
     )
-    public ResponseEntity<StandardResponse> getItemBnNameAndStatus(@RequestParam(value = "name") String itemName){
-        List<ItemResponseDTO> itemDTO = itemService.getItemBnNameAndStatus(itemName);
+    public ResponseEntity<StandardResponse> getItemByNameAndStatus(@RequestParam(value = "name") String itemName){
+        List<ItemResponseDTO> itemDTO = itemService.getItemByNameAndStatus(itemName);
         return  new ResponseEntity<>(
                 new StandardResponse(200,"Success",itemDTO),
                 HttpStatus.OK
         );
 
     }
+
+    @GetMapping(
+            path = "/get-all-by-active-status",
+            params = {"activeStatus","page","size"}
+    )
+    public ResponseEntity<StandardResponse> getItemByActiveStatus(
+            @RequestParam(value = "activeStatus") boolean activeStatus,
+            @RequestParam(value = "page")int page,
+            @RequestParam(value = "size")int size
+            ){
+        /*List<ItemResponseDTO> itemDTO = itemService.getItemByActiveStatus(activeStatus,page,size);*/
+        PaginatedResponseItemDTO paginatedResponseItemDTO = itemService.getItemByActiveStatusWithPaginated(activeStatus,page,size);
+        return  new ResponseEntity<>(
+                new StandardResponse(200,"Success",paginatedResponseItemDTO),
+                HttpStatus.OK
+        );
+
+    }
+
 
 
 }

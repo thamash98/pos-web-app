@@ -1,6 +1,7 @@
 package com.springbootproject.possystem.service;
 
 import com.springbootproject.possystem.dto.ItemDTO;
+import com.springbootproject.possystem.dto.paginated.PaginatedResponseItemDTO;
 import com.springbootproject.possystem.dto.request.ItemUpdateDTO;
 import com.springbootproject.possystem.dto.response.ItemResponseDTO;
 
@@ -13,5 +14,9 @@ public interface ItemService {
 
     ItemDTO getItemById(int itemId);
 
-    List<ItemResponseDTO> getItemBnNameAndStatus(String itemName);
+    List<ItemResponseDTO> getItemByNameAndStatus(String itemName);
+
+    List<ItemResponseDTO> getItemByActiveStatus(boolean activeStatus);
+
+    PaginatedResponseItemDTO getItemByActiveStatusWithPaginated(boolean activeStatus, int page, int size);
 }

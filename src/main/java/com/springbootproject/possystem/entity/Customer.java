@@ -8,9 +8,7 @@ import javax.persistence.*;
 @Table(name = "customer")
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-@ToString
+@Data
 public class Customer {
     @Id
     @Column(name = "customer_id")
