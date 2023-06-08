@@ -9,9 +9,6 @@ import javax.persistence.*;
 @Table(name = "item")
 @NoArgsConstructor
 @AllArgsConstructor
-//@Getter
-//@Setter
-//@ToString
 @Data
 public class Item {
 

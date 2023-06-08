@@ -18,4 +18,6 @@ public interface ItemRepo extends JpaRepository<Item,Integer> {
     List<Item> findAllByActiveStateEquals(boolean activeStatus);
 
     Page<Item> findAllByActiveStateEquals(boolean activeStatus, Pageable pageable);
+
+    int countAllByActiveStateEquals(boolean activeStatus);
 }

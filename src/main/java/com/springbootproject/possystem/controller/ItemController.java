@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Max;
 import java.util.List;
 
 @RestController
@@ -72,7 +73,7 @@ public class ItemController {
     public ResponseEntity<StandardResponse> getItemByActiveStatus(
             @RequestParam(value = "activeStatus") boolean activeStatus,
             @RequestParam(value = "page")int page,
-            @RequestParam(value = "size")int size
+            @RequestParam(value = "size")@Max(50) int size
             ){
         /*List<ItemResponseDTO> itemDTO = itemService.getItemByActiveStatus(activeStatus,page,size);*/
         PaginatedResponseItemDTO paginatedResponseItemDTO = itemService.getItemByActiveStatusWithPaginated(activeStatus,page,size);
@@ -80,9 +81,5 @@ public class ItemController {
                 new StandardResponse(200,"Success",paginatedResponseItemDTO),
                 HttpStatus.OK
         );
-
     }
-
-
-
 }
