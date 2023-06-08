@@ -3,6 +3,7 @@ package com.springbootproject.possystem.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "customer")
@@ -30,5 +31,6 @@ public class Customer {
     @Column(name = "active_state", columnDefinition = "TINYINT default 0")
     private boolean activeState;
 
-
+    @OneToMany(mappedBy = "customer")
+    private List<Orders> orders;
 }

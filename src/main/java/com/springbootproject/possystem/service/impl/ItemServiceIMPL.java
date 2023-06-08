@@ -80,17 +80,6 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
-   /* @Override
-    public List<ItemResponseDTO> getItemByActiveStatus(boolean activeStatus) {
-        List<Item> items = itemRepo.findAllByActiveStateEquals(activeStatus);
-        if(items.size() > 0){
-            List<ItemResponseDTO> itemResponseDTOS = modelMapper.map(items,new TypeToken<List<ItemResponseDTO>>(){}.getType());
-            return itemResponseDTOS;
-        }else {
-            throw new NotFoundException("No Active Status Items found");
-        }
-    }*/
-
     @Override
     public PaginatedResponseItemDTO getItemByActiveStatusWithPaginated(boolean activeStatus, int page, int size) {
         Page<Item> items = itemRepo.findAllByActiveStateEquals(activeStatus, PageRequest.of(page,size));
